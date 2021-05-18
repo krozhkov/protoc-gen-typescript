@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "target": "es2019",
+        "module": "commonjs",
+        "sourceMap": true,
+        "types": [
+            "node",
+            "google-protobuf"
+        ],
+        "lib": [
+            "es2019"
+        ],
+        "declaration": false,
+        "noEmitOnError": true,
+        "moduleResolution": "node",
+        "allowJs": false,
+        "allowUnusedLabels": false,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedParameters": true,
+        "allowUnreachableCode": false,
+    },
+    "include": [
+        "src"
+    ]
+}

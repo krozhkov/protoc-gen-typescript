@@ -1,0 +1,63 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "typescript.preferences.quoteStyle": "single",
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "search.exclude": {
+        "**/node_modules": true,
+        "build": true,
+        "**/*.orig": true,
+    },
+    "breadcrumbs.enabled": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "telemetry.enableTelemetry": false,
+    "files.watcherExclude": {
+        "**/.git/*/**": true,
+        "**/node_modules/*/**": true,
+        "**/build/*/**": true
+    },
+    "files.exclude": {
+        ".git": true,
+        ".vs": true,
+        ".idea": true,
+        ".settings": true,
+        ".tscache": true,
+        "build": true,
+        "**/*.orig": true,
+        "node_modules ": true
+    },
+    "[typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    },
+    "[typescriptreact]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    },
+    "eslint.options": {
+        "configFile": "./.eslintrc.json"
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "editor.rulers": [
+        90
+    ],
+    "workbench.editor.showTabs": true,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.autoImportSuggestions.enabled": false,
+    "emmet.showExpandedAbbreviation": "never",
+    "editor.minimap.enabled": false,
+    "editor.formatOnSave": true,
+    "editor.detectIndentation": false,
+    "editor.suggest.localityBonus": true,
+    "editor.snippetSuggestions": "bottom",
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingQuotes": "never",
+    "explorer.autoReveal": false,
+    "editor.renderWhitespace": "all"
+}
