@@ -4,6 +4,7 @@ import { TextWriter } from '../shared/text-writer';
 import { Writable } from '../shared/writable';
 import { DeclarationInfo } from './declaration-info';
 import { FieldInfo } from './field-info';
+import { MessageOptions } from './options/message-options';
 
 export class MessageInfo implements Writable {
     public readonly kind = 'message';
@@ -14,6 +15,7 @@ export class MessageInfo implements Writable {
         public comments: string[] | undefined,
         public fields: FieldInfo[],
         public nested: DeclarationInfo[],
+        public options: MessageOptions | undefined,
     ) { }
 
     public write(writer: TextWriter): void {

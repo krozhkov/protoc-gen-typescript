@@ -8,7 +8,7 @@
         "watch": "node --max_old_space_size=2500 ./node_modules/typescript/bin/tsc --project ./tsconfig.json --watch"
     },
     "dependencies": {
-        "google-protobuf": "^3.17.0"
+        "google-protobuf": "^3.17.3"
     },
     "devDependencies": {
         "@types/google-protobuf": "^3.15.2",

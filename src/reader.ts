@@ -12,6 +12,7 @@ import { ReferenceInfo } from './infos/reference-info';
 import { RepeatedInfo } from './infos/repeated-info';
 import { ScalarInfo } from './infos/scalar-info';
 import { TypeInfo } from './infos/type-info';
+import { readMessageOptions } from './read-protobuf-extensions';
 import { changeExtension } from './shared/filename';
 import { NameBuilder, toName } from './shared/name-builder';
 import { EnumPathBuilder, file, MessagePathBuilder, PathBuilder } from './shared/path-builder';
@@ -72,6 +73,7 @@ function getMessageInfo(
     const name = asNonNullableOrDie(message.getName(), 'The name of the message must be specified.');
     const messageName = fullname.add(name);
     const comments = tryGetLeadingComments(locations, path);
+    const options = readMessageOptions(message.getOptions());
 
     const nested = toArrayOf<DeclarationInfo>();
 
@@ -102,7 +104,7 @@ function getMessageInfo(
         (value, index) => getFieldInfo(value, path.field(index), oneOfList, locations),
     );
 
-    return new MessageInfo(name, messageName, comments, fields, nested);
+    return new MessageInfo(name, messageName, comments, fields, nested, options);
 }
 
 function getEnumInfo(

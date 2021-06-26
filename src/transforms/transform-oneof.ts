@@ -67,6 +67,7 @@ export class TransformOneOf implements DeclarationTransformNode {
             [],
             fields.concat(this.toRequiredOneOfField(oneOf)),
             [],
+            undefined,
         );
     }
 

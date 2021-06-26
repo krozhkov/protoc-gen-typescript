@@ -12,6 +12,7 @@ mkdir -p $1/node_modules/.bin
 cp -r -f ./build $1/node_modules/protoc-gen-typescript
 cp -r -f ./bin $1/node_modules/protoc-gen-typescript
 cp -r -f ./node_modules $1/node_modules/protoc-gen-typescript
+cp -r -f ./extensions $1/node_modules/protoc-gen-typescript
 cp -f package.json $1/node_modules/protoc-gen-typescript
 
 pushd $1/node_modules/.bin
