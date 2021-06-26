@@ -16,7 +16,7 @@ function run() {
     -I$GRPC_GATEWAY_MOD/third_party/googleapis \
     -I$GRPC_GATEWAY_MOD \
     --plugin=./bin/protoc-gen-typescript \
-    --typescript_out=paths=omit_base,enums=to_string_union:$1/gen \
+    --typescript_out=paths=omit_base,enums=to_string_union,swagger_options=set_required:$1/gen \
     $(find $1 -iname "*.proto")
 }
 
@@ -28,7 +28,7 @@ function debug() {
     -I$GRPC_GATEWAY_MOD/third_party/googleapis \
     -I$GRPC_GATEWAY_MOD \
     --plugin=./bin/protoc-gen-typescript_debug \
-    --typescript_debug_out=paths=omit_base,enums=to_string_union:$1/gen \
+    --typescript_debug_out=paths=omit_base,enums=to_string_union,swagger_options=set_required:$1/gen \
     $(find $1 -iname "*.proto")
 }
 

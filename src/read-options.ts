@@ -4,6 +4,7 @@ import { Options } from './shared/options';
 const defaultOptions: Options = {
     paths: undefined,
     enums: undefined,
+    swagger_options: undefined,
 };
 
 export function readOptions(params: string | undefined): Options {
@@ -25,6 +26,10 @@ function setOption(options: Options, key: string, value: string | undefined): Op
         case 'enums': {
             const enums = value === 'to_string_union' ? value : undefined;
             return atop(options, { enums });
+        }
+        case 'swagger_options': {
+            const swagger_options = value === 'set_required' ? value : undefined;
+            return atop(options, { swagger_options });
         }
         default:
             return crash(`Unknown options key: ${key}`);

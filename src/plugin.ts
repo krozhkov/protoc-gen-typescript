@@ -7,7 +7,7 @@ import { toBasePath } from './shared/filename';
 import { Options } from './shared/options';
 import { TextWriter } from './shared/text-writer';
 import { dareDescriptorByName, willReadStream, willWriteToStream } from './shared/utils';
-import { resolveReferences, transformEnumToUnion, transformGoInjectTag, transformOneOf, transformOneOfFallback } from './transforms';
+import { resolveReferences, transformEnumToUnion, transformGoInjectTag, transformMessageOptions, transformOneOf, transformOneOfFallback } from './transforms';
 import { TransformPipe } from './transforms/pipe';
 
 async function main() {
@@ -24,6 +24,7 @@ async function main() {
 
     const transformed = new TransformPipe(options)
         .pipe(transformGoInjectTag)
+        .pipe(transformMessageOptions)
         .pipe(transformOneOf)
         .pipe(transformOneOfFallback)
         .pipe(transformEnumToUnion)
