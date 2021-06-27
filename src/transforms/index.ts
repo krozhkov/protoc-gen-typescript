@@ -1,4 +1,5 @@
 import { ResolveReferences } from './resolve-references';
+import { TransformAddServicePrefix } from './transform-add-service-prefix';
 import { TransformEnumToUnion } from './transform-enum-to-union';
 import { TransformGoInjectTag } from './transform-go-inject-tag';
 import { TransformMessageOptions } from './transform-message-options';
@@ -16,3 +17,5 @@ export const transformOneOfFallback = new TransformOneOfFallback();
 export const transformOneOf = new TransformOneOf();
 
 export const transformMessageOptions = new TransformMessageOptions();
+
+export const transformAddServicePrefix = new TransformAddServicePrefix();

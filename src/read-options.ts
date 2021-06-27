@@ -1,10 +1,12 @@
-import { atop, crash, isNullable } from './common/core';
+import { asNonNullableOr, atop, crash, isNullable } from './common/core';
+import { addByMerge, toRecordOf } from './common/record';
 import { Options } from './shared/options';
 
 const defaultOptions: Options = {
     paths: undefined,
     enums: undefined,
     swagger_options: undefined,
+    sprefix: undefined,
 };
 
 export function readOptions(params: string | undefined): Options {
@@ -30,6 +32,22 @@ function setOption(options: Options, key: string, value: string | undefined): Op
         case 'swagger_options': {
             const swagger_options = value === 'set_required' ? value : undefined;
             return atop(options, { swagger_options });
+        }
+        case 'sprefix': {
+            if (isNullable(value) || value.indexOf('~') === -1) return options;
+
+            const pair = value.split('~');
+
+            const record = asNonNullableOr(options.sprefix, toRecordOf<string, string>());
+
+            return atop(options, {
+                sprefix: addByMerge(
+                    record,
+                    pair[0],
+                    pair[1],
+                    (_, adding) => adding,
+                ),
+            });
         }
         default:
             return crash(`Unknown options key: ${key}`);

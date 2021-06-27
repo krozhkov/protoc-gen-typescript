@@ -8,7 +8,7 @@ import { toBasePath } from './shared/filename';
 import { Options } from './shared/options';
 import { TextWriter } from './shared/text-writer';
 import { dareDescriptorByName, willReadStream, willWriteToStream } from './shared/utils';
-import { resolveReferences, transformEnumToUnion, transformGoInjectTag, transformMessageOptions, transformOneOf, transformOneOfFallback } from './transforms';
+import { resolveReferences, transformAddServicePrefix, transformEnumToUnion, transformGoInjectTag, transformMessageOptions, transformOneOf, transformOneOfFallback } from './transforms';
 import { TransformPipe } from './transforms/pipe';
 
 async function main() {
@@ -30,6 +30,7 @@ async function main() {
         .pipe(transformOneOfFallback)
         .pipe(transformEnumToUnion)
         .pipe(resolveReferences)
+        .pipe(transformAddServicePrefix)
         .transform(files);
 
     const response = toCodeGeneratorResponse(transformed, options);

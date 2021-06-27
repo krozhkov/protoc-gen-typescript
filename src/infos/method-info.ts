@@ -46,7 +46,7 @@ export class MethodInfo implements Writable {
             this.writeOutputType(writer);
             writer.write(`>(\`${fixUrlParameters(url)}\``);
             if (isNonNullable(body)) {
-                writer.write(`, ${fixBodyParameter(body)}`);
+                writer.write(`, ${isNonNullable(this.inputType) ? fixBodyParameter(body) : '{}'}`);
             }
             writer.writeLine(`)`)
             writer.writeLine(`.toPromise();`);
@@ -55,6 +55,7 @@ export class MethodInfo implements Writable {
 
         writer.unindent();
         writer.writeLine(`}`);
+        writer.writeLine();
     }
 
     private writeOutputType(writer: TextWriter): void {
