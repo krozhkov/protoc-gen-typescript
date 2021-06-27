@@ -1,4 +1,5 @@
 import { CodeGeneratorRequest, CodeGeneratorResponse } from "google-protobuf/google/protobuf/compiler/plugin_pb";
+import '../extensions/google/api/annotations_pb';
 import '../extensions/protoc-gen-swagger/options/annotations_pb';
 import { FileInfo } from './infos/file-info';
 import { readOptions } from './read-options';

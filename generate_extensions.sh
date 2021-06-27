@@ -16,3 +16,12 @@ protoc \
     -I$GRPC_GATEWAY_MOD \
     --js_out=import_style=commonjs,binary:$OUTPUT_PATH \
     $SWAGGER_OPTIONS/*.proto
+
+# generate code for googleapis options
+export GOOGLEAPIS=$GRPC_GATEWAY_MOD/third_party/googleapis
+export GOOGLE_API_OPTIONS=$GOOGLEAPIS/google/api/
+
+protoc \
+    -I$GOOGLEAPIS \
+    --js_out=import_style=commonjs,binary:$OUTPUT_PATH \
+    $GOOGLE_API_OPTIONS/*.proto

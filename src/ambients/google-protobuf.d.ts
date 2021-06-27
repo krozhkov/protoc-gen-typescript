@@ -22,17 +22,17 @@ type SetFieldWithDefault<K extends string, T extends Primitive, Owner> = {
 };
 
 // WrapperField
-type WrapperField<K extends string, T extends jspb.Message, Owner> =
+type WrapperField<K extends string, T, Owner> =
     & GetWrapperField<K, T>
     & SetWrapperField<K, T, Owner>
     & ClearWrapperField<K, Owner>
     & HasWrapperField<K>;
 
-type GetWrapperField<K extends string, T extends jspb.Message> = {
+type GetWrapperField<K extends string, T> = {
     [P in `get${Capitalize<K>}`]: () => T | undefined;
 };
 
-type SetWrapperField<K extends string, T extends jspb.Message, Owner> = {
+type SetWrapperField<K extends string, T, Owner> = {
     [P in `set${Capitalize<K>}`]: (value: T | undefined) => Owner;
 };
 

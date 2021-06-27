@@ -25,6 +25,10 @@ export function capitalize<T extends string>(value: T): Capitalize<T> {
     return value.charAt(0).toUpperCase() + value.slice(1) as Capitalize<T>;
 }
 
+export function uncapitalize<T extends string>(value: T): Uncapitalize<T> {
+    return value.substr(0, 1).toLowerCase() + value.substr(1) as Uncapitalize<T>;
+}
+
 export function snakeCaseToCamel(value: string): string {
     return withHeadOrOtherwise(
         value.toLowerCase().split(/[-_]/),

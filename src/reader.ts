@@ -14,7 +14,7 @@ import { RepeatedInfo } from './infos/repeated-info';
 import { ScalarInfo } from './infos/scalar-info';
 import { ServiceInfo } from './infos/service-info';
 import { TypeInfo } from './infos/type-info';
-import { readMessageOptions } from './read-protobuf-extensions';
+import { readMessageOptions, readMethodOptions } from './read-protobuf-extensions';
 import { changeExtension } from './shared/filename';
 import { NameBuilder, toName } from './shared/name-builder';
 import { EnumPathBuilder, file, MessagePathBuilder, PathBuilder, ServicePathBuilder } from './shared/path-builder';
@@ -210,12 +210,12 @@ function getMethodInfo(
 ): MethodInfo {
     const name = asNonNullableOrDie(method.getName(), 'The name of the method must be specified.');
     const comments = tryGetLeadingComments(locations, path);
-    const opitons = method.getOptions()
+    const options = readMethodOptions(method.getOptions());
 
     const inputType = insteadNonNullableOr(method.getInputType(), typeNameToReference, undefined);
     const outputType = insteadNonNullableOr(method.getOutputType(), typeNameToReference, undefined);
 
-    return new MethodInfo(name, inputType, outputType, comments);
+    return new MethodInfo(name, inputType, outputType, options, comments);
 }
 
 function typeNameToReference(typeName: string): ReferenceInfo | undefined {
