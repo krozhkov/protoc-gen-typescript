@@ -70,6 +70,7 @@ function applyTransformToNestedDeclarations(
     transform: (declaration: DeclarationInfo) => DeclarationInfo,
 ): DeclarationInfo {
     switch (declaration.kind) {
+        case 'service':
         case 'enum':
             return transform(declaration);
         case 'union':
@@ -101,6 +102,7 @@ function applyTransformToFieldInDeclaration(
     transform: (field: FieldInfo) => FieldInfo,
 ): typeof declaration {
     switch (declaration.kind) {
+        case 'service':
         case 'union':
         case 'enum':
             return declaration;

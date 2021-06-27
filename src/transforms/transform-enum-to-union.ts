@@ -17,6 +17,7 @@ export class TransformEnumToUnion implements DeclarationTransformNode {
                 return this.transformEnum(declaration);
             case 'union':
             case 'message':
+            case 'service':
                 return declaration;
             default:
                 return broke(declaration);

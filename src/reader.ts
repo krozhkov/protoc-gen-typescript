@@ -1,6 +1,6 @@
-import { DescriptorProto, EnumDescriptorProto, EnumValueDescriptorProto, FieldDescriptorProto, FileDescriptorProto, SourceCodeInfo } from 'google-protobuf/google/protobuf/descriptor_pb';
+import { DescriptorProto, EnumDescriptorProto, EnumValueDescriptorProto, FieldDescriptorProto, FileDescriptorProto, MethodDescriptorProto, ServiceDescriptorProto, SourceCodeInfo } from 'google-protobuf/google/protobuf/descriptor_pb';
 import { choose, map, toArrayOf } from './common/arrays';
-import { asNonNullableOr, asNonNullableOrDie, bounce, broke, insteadNonNullable, isNonNullable, isNullable } from './common/core';
+import { asNonNullableOr, asNonNullableOrDie, bounce, broke, insteadNonNullable, insteadNonNullableOr, isNonNullable, isNullable } from './common/core';
 import { atOr, fromArray } from './common/record';
 import { isNullableOrEmpty } from './common/text';
 import { DeclarationInfo } from './infos/declaration-info';
@@ -8,14 +8,16 @@ import { EnumInfo, EnumValueInfo } from './infos/enum-info';
 import { FieldInfo } from './infos/field-info';
 import { FileInfo } from './infos/file-info';
 import { MessageInfo } from './infos/message-info';
+import { MethodInfo } from './infos/method-info';
 import { ReferenceInfo } from './infos/reference-info';
 import { RepeatedInfo } from './infos/repeated-info';
 import { ScalarInfo } from './infos/scalar-info';
+import { ServiceInfo } from './infos/service-info';
 import { TypeInfo } from './infos/type-info';
 import { readMessageOptions } from './read-protobuf-extensions';
 import { changeExtension } from './shared/filename';
 import { NameBuilder, toName } from './shared/name-builder';
-import { EnumPathBuilder, file, MessagePathBuilder, PathBuilder } from './shared/path-builder';
+import { EnumPathBuilder, file, MessagePathBuilder, PathBuilder, ServicePathBuilder } from './shared/path-builder';
 
 export function getFileInfo(
     descriptor: FileDescriptorProto,
@@ -45,6 +47,16 @@ export function getFileInfo(
         (enum_, index) => getEnumInfo(
             enum_,
             file.enum(index),
+            packageName,
+            locations,
+        ),
+    ));
+
+    declarations.push(...map(
+        descriptor.getServiceList(),
+        (service, index) => getServiceInfo(
+            service,
+            file.service(index),
             packageName,
             locations,
         ),
@@ -171,6 +183,45 @@ function getUnderlyingType(
     return isRepeated
         ? new RepeatedInfo(local)
         : local;
+}
+
+function getServiceInfo(
+    service: ServiceDescriptorProto,
+    path: ServicePathBuilder,
+    fullname: NameBuilder,
+    locations: Record<string, SourceCodeInfo.Location>,
+): ServiceInfo {
+    const name = asNonNullableOrDie(service.getName(), 'The name of the service must be specified.');
+    const serviceName = fullname.add(name);
+    const comments = tryGetLeadingComments(locations, path);
+
+    const methods = map(
+        service.getMethodList(),
+        (method, index) => getMethodInfo(method, path.method(index), locations),
+    );
+
+    return new ServiceInfo(name, serviceName, methods, comments);
+}
+
+function getMethodInfo(
+    method: MethodDescriptorProto,
+    path: PathBuilder,
+    locations: Record<string, SourceCodeInfo.Location>,
+): MethodInfo {
+    const name = asNonNullableOrDie(method.getName(), 'The name of the method must be specified.');
+    const comments = tryGetLeadingComments(locations, path);
+    const opitons = method.getOptions()
+
+    const inputType = insteadNonNullableOr(method.getInputType(), typeNameToReference, undefined);
+    const outputType = insteadNonNullableOr(method.getOutputType(), typeNameToReference, undefined);
+
+    return new MethodInfo(name, inputType, outputType, comments);
+}
+
+function typeNameToReference(typeName: string): ReferenceInfo | undefined {
+    return typeName === '.google.protobuf.Empty'
+        ? undefined
+        : new ReferenceInfo(typeName);
 }
 
 function toTypeName(

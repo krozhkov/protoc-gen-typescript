@@ -36,8 +36,14 @@ export class FileInfo implements Writable {
 
     private writeImports(writer: TextWriter): void {
         const referenceMap = this.getReferenceMap();
+        const hasServices = this.declarations.some(e => e.kind === 'service');
 
-        if (isEmpty(referenceMap)) return;
+        if (isEmpty(referenceMap) && !hasServices) return;
+
+        if (hasServices) {
+            writer.writeLine(`import { HttpClient } from '@angular/common/http';`);
+            writer.writeLine(`import { Injectable } from '@angular/core';`);
+        }
 
         forEach(referenceMap, (names, fileName) => {
             const relativePath = toRelativePath(this.fileName, fileName);

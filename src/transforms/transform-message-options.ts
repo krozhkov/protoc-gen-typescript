@@ -18,6 +18,7 @@ export class TransformMessageOptions implements DeclarationTransformNode {
                 return this.transformMessage(declaration, options.swagger_options);
             case 'union':
             case 'enum':
+            case 'service':
                 return declaration;
             default:
                 return broke(declaration);

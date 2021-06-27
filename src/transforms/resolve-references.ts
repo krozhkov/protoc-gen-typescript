@@ -47,6 +47,7 @@ function fullnameOutOf(declaration: DeclarationInfo): NameBuilder[] {
         case 'union':
         case 'message': return flatMap(declaration.nested, fullnameOutOf)
             .concat(declaration.fullname);
+        case 'service':
         case 'enum': return [declaration.fullname];
         default: return broke(declaration);
     }

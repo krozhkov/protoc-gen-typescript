@@ -1,6 +1,7 @@
 import { choose, flatMap } from '../common/arrays';
-import { broke } from '../common/core';
+import { broke, isNonNullable } from '../common/core';
 import { DeclarationInfo } from '../infos/declaration-info';
+import { MethodInfo } from '../infos/method-info';
 import { ReferenceInfo } from '../infos/reference-info';
 import { TypeInfo } from '../infos/type-info';
 
@@ -20,9 +21,26 @@ export function getReferences(declaration: DeclarationInfo): ReferenceInfo[] {
                 value => getReference(value.type),
             ));
         }
+        case 'service': {
+            return flatMap(declaration.methods, getMethodReferences);
+        }
         case 'enum': return [];
         default: return broke(declaration);
     }
+}
+
+function getMethodReferences(method: MethodInfo): ReferenceInfo[] {
+    const references: ReferenceInfo[] = [];
+
+    if (isNonNullable(method.inputType)) {
+        references.push(method.inputType);
+    }
+
+    if (isNonNullable(method.outputType)) {
+        references.push(method.outputType);
+    }
+
+    return references;
 }
 
 function getReference(type: TypeInfo): ReferenceInfo | null {

@@ -15,6 +15,7 @@ export class TransformOneOf implements DeclarationTransformNode {
 
     public transform(declaration: DeclarationInfo, options: Options): DeclarationInfo {
         switch (declaration.kind) {
+            case 'service':
             case 'enum':
                 return declaration;
             case 'union':
