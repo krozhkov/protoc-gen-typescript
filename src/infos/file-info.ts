@@ -1,5 +1,5 @@
 import { choose, distinctByKey, flatMap } from '../common/arrays';
-import { insteadNonNullable } from '../common/core';
+import { bounce, insteadNonNullable } from '../common/core';
 import { forEach, fromArray, isEmpty } from '../common/record';
 import { toRelativePath } from '../shared/filename';
 import { NameBuilder } from '../shared/name-builder';
@@ -50,7 +50,7 @@ export class FileInfo implements Writable {
 
             writer.write('import { ');
 
-            names.map(name => name.getRootTypeName()).sort().forEach((type, index) => {
+            distinctByKey(names.map(name => name.getRootTypeName()), bounce).sort().forEach((type, index) => {
                 if (index > 0) {
                     writer.write(', ');
                 }

@@ -1,4 +1,4 @@
-import { isNonNullable } from '../common/core';
+import { isNonNullable, isNullable } from '../common/core';
 import { uncapitalize } from '../common/text';
 import { dumpComments } from '../shared/dumping';
 import { TextWriter } from '../shared/text-writer';
@@ -36,7 +36,6 @@ export class MethodInfo implements Writable {
         writer.writeLine(` {`);
         writer.indent();
 
-        // REST client does not support non-annotated methods.
         if (isNonNullable(this.options)) {
             const { httpMethod, url, body } = this.options;
 
@@ -45,12 +44,15 @@ export class MethodInfo implements Writable {
             writer.write(`.${httpMethod.toLowerCase()}<`);
             this.writeOutputType(writer);
             writer.write(`>(\`${fixUrlParameters(url)}\``);
-            if (isNonNullable(body)) {
+            if (isNonNullable(body) || (httpMethod !== 'GET' && httpMethod !== 'DELETE')) {
                 writer.write(`, ${isNonNullable(this.inputType) ? fixBodyParameter(body) : '{}'}`);
             }
             writer.writeLine(`)`)
             writer.writeLine(`.toPromise();`);
             writer.unindent();
+        } else {
+            // REST client does not support non-annotated methods.
+            writer.writeLine(`throw new Error('Method is not implemented!');`);
         }
 
         writer.unindent();
@@ -71,7 +73,9 @@ function fixUrlParameters(url: string): string {
     return url.replace(/\{(.*?)\}/g, '$${value.$1}');
 }
 
-function fixBodyParameter(body: string): string {
+function fixBodyParameter(body: string | undefined): string {
+    if (isNullable(body)) return '{}';
+
     return body === '*'
         ? 'value'
         : 'value.' + body;
