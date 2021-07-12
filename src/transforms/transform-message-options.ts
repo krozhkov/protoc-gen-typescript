@@ -15,7 +15,7 @@ export class TransformMessageOptions implements DeclarationTransformNode {
 
         switch (declaration.kind) {
             case 'message':
-                return this.transformMessage(declaration, options.swagger_options);
+                return this.transformMessage(declaration, options);
             case 'union':
             case 'enum':
             case 'service':
@@ -27,31 +27,43 @@ export class TransformMessageOptions implements DeclarationTransformNode {
 
     private transformMessage(
         message: MessageInfo,
-        config: NonNullable<Options['swagger_options']>,
+        options: Options,
     ): MessageInfo {
-        switch (config) {
+        switch (options.swagger_options) {
             case 'set_required':
-                return this.processRequiredOption(message);
+                return this.processRequiredOption(message, options);
             default:
                 return message;
         }
     }
 
-    private processRequiredOption(message: MessageInfo): typeof message {
+    private processRequiredOption(message: MessageInfo, options: Options): typeof message {
         if (isNullable(message.options) || message.options.required.length === 0) return message;
 
         const requiredList = message.options.required;
 
-        message.fields = map(message.fields, field => this.setNonRequiredFieldAsNullable(field, requiredList));
+        message.fields = map(message.fields, field => this.setNonRequiredFieldAsOptional(field, requiredList, options));
 
         return message;
     }
 
-    private setNonRequiredFieldAsNullable(field: FieldInfo, requiredList: string[]): FieldInfo {
+    private setNonRequiredFieldAsOptional(field: FieldInfo, requiredList: string[], options: Options): FieldInfo {
         const isRequired = requiredList.indexOf(field.name) !== -1;
 
-        return !isRequired && field.type.kind !== 'nullable'
+        return !isRequired
+            ? options.optional === 'as_nullable'
+                ? this.makeFieldNullable(field)
+                : this.makeFieldOptional(field)
+            : field;
+    }
+
+    private makeFieldNullable(field: FieldInfo): FieldInfo {
+        return field.type.kind !== 'nullable'
             ? atop(field, { type: new NullableInfo(field.type) })
             : field;
+    }
+
+    private makeFieldOptional(field: FieldInfo): FieldInfo {
+        return atop(field, { isOptional: true });
     }
 }

@@ -5,6 +5,7 @@ import { Options } from './shared/options';
 const defaultOptions: Options = {
     paths: undefined,
     enums: undefined,
+    optional: undefined,
     swagger_options: undefined,
     sprefix: undefined,
 };
@@ -48,6 +49,10 @@ function setOption(options: Options, key: string, value: string | undefined): Op
                     (_, adding) => adding,
                 ),
             });
+        }
+        case 'optional': {
+            const optional = value === 'as_nullable' ? value : undefined;
+            return atop(options, { optional });
         }
         default:
             return crash(`Unknown options key: ${key}`);

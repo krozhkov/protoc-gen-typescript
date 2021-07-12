@@ -18,7 +18,7 @@ import { FieldTransformNode } from './transform-node';
 export class TransformGoInjectTag implements FieldTransformNode {
     public readonly kind = 'transform-field';
 
-    public transform(field: FieldInfo, _options: Options): FieldInfo {
+    public transform(field: FieldInfo, options: Options): FieldInfo {
         const tags = extractInjectTag(field.comments);
 
         const validate = insteadNonNullableOr(
@@ -28,12 +28,12 @@ export class TransformGoInjectTag implements FieldTransformNode {
         );
 
         return chainable(field)
-            .chain(value => this.setOptional(value, validate))
+            .chain(value => this.setOptional(value, validate, options))
             .chain(value => this.setOneOfTagTypes(value, validate))
             .get();
     }
 
-    private setOptional(field: FieldInfo, validate: Record<string, string | true>): FieldInfo {
+    private setOptional(field: FieldInfo, validate: Record<string, string | true>, options: Options): FieldInfo {
         const required = withAt(validate, 'required', alwaysTrue, alwaysFalse);
         const omitempty = withAt(validate, 'omitempty', alwaysTrue, alwaysFalse);
         const isdefault = withAt(validate, 'isdefault', alwaysTrue, alwaysFalse);
@@ -41,9 +41,21 @@ export class TransformGoInjectTag implements FieldTransformNode {
         // KR: stay as is if no attribute is specified.
         if (!required && !omitempty && !isdefault) return field;
 
-        return (omitempty || isdefault || !required) && field.type.kind !== 'nullable'
+        return (omitempty || isdefault || !required)
+            ? options.optional === 'as_nullable'
+                ? this.makeFieldNullable(field)
+                : this.makeFieldOptional(field)
+            : field;
+    }
+
+    private makeFieldNullable(field: FieldInfo): FieldInfo {
+        return field.type.kind !== 'nullable'
             ? atop(field, { type: new NullableInfo(field.type) })
             : field;
+    }
+
+    private makeFieldOptional(field: FieldInfo): FieldInfo {
+        return atop(field, { isOptional: true });
     }
 
     private setOneOfTagTypes(field: FieldInfo, validate: Record<string, string | true>): FieldInfo {
