@@ -1,0 +1,7 @@
+# .npmignore
+.vscode
+node_modules
+src
+build/**/*.map
+*.sh
+tsconfig.json

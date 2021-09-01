@@ -2,7 +2,9 @@
     "name": "protoc-gen-typescript",
     "version": "0.0.1",
     "description": "Protocol Buffers Generator for TypeScript",
+    "license" : "MIT",
     "main": "build/plugin.js",
+    "bin": "./bin/protoc-gen-typescript",
     "scripts": {
         "build": "node --max_old_space_size=2500 ./node_modules/typescript/bin/tsc --project ./tsconfig.json",
         "watch": "node --max_old_space_size=2500 ./node_modules/typescript/bin/tsc --project ./tsconfig.json --watch"
